@@ -18,12 +18,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.jokeapp.ui.NavScreen
 import io.github.jokeapp.ui.favorites.FavoritesScreen
 import io.github.jokeapp.ui.joke.JokeScreen
 import io.github.jokeapp.ui.theme.JokeApplicationTheme
 import io.github.jokeapp.ui.theme.Teal200
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val navItems = listOf(
