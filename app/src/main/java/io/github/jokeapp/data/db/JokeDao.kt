@@ -1,9 +1,6 @@
 package io.github.jokeapp.data.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import io.github.jokeapp.data.Joke
 import kotlinx.coroutines.flow.Flow
 
@@ -15,4 +12,7 @@ interface JokeDao {
 
     @Query("SELECT * from joke")
     fun loadAllSavedJokes(): Flow<List<Joke>>
+
+    @Delete
+    suspend fun deleteJoke(joke: Joke)
 }

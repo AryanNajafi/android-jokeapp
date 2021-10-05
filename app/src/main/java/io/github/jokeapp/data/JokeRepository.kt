@@ -27,4 +27,11 @@ class JokeRepository @Inject constructor(
     fun loadSavedJokes(): Flow<List<Joke>> {
         return jokeDao.loadAllSavedJokes()
     }
+
+    suspend fun deleteJoke(joke: Joke) {
+        withContext(ioDispatcher) {
+            jokeDao.deleteJoke(joke = joke)
+        }
+
+    }
 }

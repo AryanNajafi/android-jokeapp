@@ -29,6 +29,12 @@ class FavoriteJokesViewModel @Inject constructor(
         }
     }
 
+    fun removeJokeFromFavorites(joke: Joke) {
+        viewModelScope.launch {
+            repository.deleteJoke(joke)
+        }
+    }
+
 }
 
 data class FavoritesViewState(

@@ -25,13 +25,15 @@ fun FavoritesScreen(
 
     LazyColumn(modifier = Modifier.padding(10.dp)) {
         items(viewState.jokes) { joke ->
-            FavoriteJokeCard(joke = joke)
+            FavoriteJokeCard(joke = joke, onJokeDelete = {
+                viewModel.removeJokeFromFavorites(it)
+            })
         }
     }
 }
 
 @Composable
-fun FavoriteJokeCard(joke: Joke) {
+fun FavoriteJokeCard(joke: Joke, onJokeDelete: (Joke) -> Unit) {
     Card(
         modifier = Modifier
             .padding(vertical = 5.dp, horizontal = 5.dp)
@@ -51,7 +53,7 @@ fun FavoriteJokeCard(joke: Joke) {
 
             Row {
                 Button(
-                    onClick = {  },
+                    onClick = { onJokeDelete(joke) },
                     modifier = Modifier.padding(horizontal = 5.dp)
                 ) {
                     Icon(
