@@ -1,5 +1,7 @@
 package io.github.jokeapp.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jokeapp.R
+import io.github.jokeapp.data.Joke
 import io.github.jokeapp.ui.favorites.FavoriteJokesViewModel
 import io.github.jokeapp.ui.favorites.FavoritesScreen
 import io.github.jokeapp.ui.joke.JokeScreen
@@ -116,4 +119,11 @@ fun BottomNavBar(navController: NavController, items: List<NavScreen>) {
 fun DefaultPreview() {
     JokeApplicationTheme {
     }
+}
+
+fun shareJoke(context: Context, joke: Joke) {
+    val intent = Intent(Intent.ACTION_SEND)
+    intent.type = "text/plain"
+    intent.putExtra(Intent.EXTRA_TEXT, joke.joke);
+    context.startActivity(intent)
 }

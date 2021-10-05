@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.jokeapp.R
 import io.github.jokeapp.data.Joke
+import io.github.jokeapp.ui.shareJoke
 
 @Composable
 fun JokeScreen(
@@ -26,10 +27,16 @@ fun JokeScreen(
     Box(Modifier.fillMaxSize()) {
         if (viewState.loading.not()) {
             viewState.joke?.let {
-                JokeCard(joke = it, onJokeLikeClick = {
-                    viewModel.saveJokeAsFavorite()
-                    Toast.makeText(context, R.string.toast_joke_saved, Toast.LENGTH_LONG).show()
-                })
+                JokeCard(
+                    joke = it,
+                    onJokeLikeClick = {
+                        viewModel.saveJokeAsFavorite()
+                        Toast.makeText(context, R.string.toast_joke_saved, Toast.LENGTH_LONG).show()
+                    },
+                    onShareClick = {
+                        shareJoke(context = context, it)
+                    }
+                )
             }
             viewState.error?.let {
                 Text(
@@ -57,7 +64,7 @@ fun JokeScreen(
 }
 
 @Composable
-fun JokeCard(joke: Joke, onJokeLikeClick: () -> Unit) {
+fun JokeCard(joke: Joke, onJokeLikeClick: () -> Unit, onShareClick: () -> Unit) {
     Card(
         modifier = Modifier
             .padding(vertical = 10.dp, horizontal = 5.dp)
@@ -87,6 +94,19 @@ fun JokeCard(joke: Joke, onJokeLikeClick: () -> Unit) {
                     )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                     Text(text = stringResource(id = R.string.button_favorite_title))
+                }
+
+                Button(
+                    onClick = onShareClick,
+                    modifier = Modifier.padding(horizontal = 5.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_share),
+                        contentDescription = null,
+                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                    )
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(text = stringResource(id = R.string.button_share_title))
                 }
             }
             Spacer(modifier = Modifier.height(5.dp))
