@@ -1,5 +1,6 @@
 package io.github.jokeapp.ui.joke
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -8,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -19,10 +21,15 @@ fun JokeScreen(
     viewModel: JokeViewModel,
 ) {
     val viewState: JokeViewState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
     Box(Modifier.fillMaxSize()) {
         if (viewState.loading.not()) {
             viewState.joke?.let {
-                JokeCard(joke = it)
+                JokeCard(joke = it, onJokeLikeClick = {
+                    viewModel.saveJokeAsFavorite()
+                    Toast.makeText(context, R.string.toast_joke_saved, Toast.LENGTH_LONG).show()
+                })
             }
             viewState.error?.let {
                 Text(
@@ -50,7 +57,7 @@ fun JokeScreen(
 }
 
 @Composable
-fun JokeCard(joke: Joke) {
+fun JokeCard(joke: Joke, onJokeLikeClick: () -> Unit) {
     Card(
         modifier = Modifier
             .padding(vertical = 10.dp, horizontal = 5.dp)
@@ -70,7 +77,7 @@ fun JokeCard(joke: Joke) {
 
             Row {
                 Button(
-                    onClick = {  },
+                    onClick = onJokeLikeClick,
                     modifier = Modifier.padding(horizontal = 5.dp)
                 ) {
                     Icon(

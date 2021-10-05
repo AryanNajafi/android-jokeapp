@@ -42,6 +42,14 @@ class JokeViewModel @Inject constructor(
     fun getNewJoke() {
         loadNewRandomJoke()
     }
+
+    fun saveJokeAsFavorite() {
+        _uiState.value.joke?.let {
+            viewModelScope.launch {
+                repository.saveJoke(it)
+            }
+        }
+    }
 }
 
 data class JokeViewState(

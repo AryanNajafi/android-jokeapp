@@ -5,4 +5,6 @@
     <string name="button_favorite_title">Like</string>
     <string name="button_refresh_title">GET NEW JOKE</string>
     <string name="error_fetching_title">Something went wrong. Try again.</string>
+    <string name="toast_joke_saved">Joke saved as favorite</string>
+
 </resources>

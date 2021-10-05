@@ -10,6 +10,8 @@ import dagger.hilt.components.SingletonComponent
 import io.github.jokeapp.data.api.JokeService
 import io.github.jokeapp.data.db.AppDatabase
 import io.github.jokeapp.data.db.JokeDao
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -46,4 +48,7 @@ class AppModule {
     fun provideJokeDao(database: AppDatabase): JokeDao {
         return database.jokeDao()
     }
+
+    @Provides
+    fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 }
