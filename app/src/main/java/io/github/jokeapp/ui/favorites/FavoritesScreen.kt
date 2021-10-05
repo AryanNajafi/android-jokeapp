@@ -1,5 +1,6 @@
 package io.github.jokeapp.ui.favorites
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -22,11 +24,13 @@ fun FavoritesScreen(
     viewModel: FavoriteJokesViewModel,
 ) {
     val viewState: FavoritesViewState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     LazyColumn(modifier = Modifier.padding(10.dp)) {
         items(viewState.jokes) { joke ->
             FavoriteJokeCard(joke = joke, onJokeDelete = {
                 viewModel.removeJokeFromFavorites(it)
+                Toast.makeText(context, R.string.toast_joke_removed, Toast.LENGTH_SHORT).show()
             })
         }
     }

@@ -7,5 +7,6 @@
     <string name="button_refresh_title">GET NEW JOKE</string>
     <string name="error_fetching_title">Something went wrong. Try again.</string>
     <string name="toast_joke_saved">Joke saved as favorite</string>
+    <string name="toast_joke_removed">Joke removed from favorites</string>
 
 </resources>
