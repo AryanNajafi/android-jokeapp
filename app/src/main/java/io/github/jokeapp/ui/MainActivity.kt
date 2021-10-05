@@ -1,4 +1,4 @@
-package io.github.jokeapp
+package io.github.jokeapp.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -19,10 +20,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.jokeapp.ui.NavScreen
+import io.github.jokeapp.R
 import io.github.jokeapp.ui.favorites.FavoritesScreen
 import io.github.jokeapp.ui.joke.JokeScreen
+import io.github.jokeapp.ui.joke.JokeViewModel
 import io.github.jokeapp.ui.theme.JokeApplicationTheme
+import io.github.jokeapp.ui.theme.LightGray
 import io.github.jokeapp.ui.theme.Teal200
 
 @AndroidEntryPoint
@@ -48,14 +51,18 @@ class MainActivity : ComponentActivity() {
                     },
                     bottomBar = {
                         BottomNavBar(navController = navController, items = navItems)
-                    }
+                    },
+                    backgroundColor = LightGray
                 ) { innerPaddings ->
                     NavHost(
                         navController = navController,
                         startDestination = NavScreen.Joke.route,
                         modifier = Modifier.padding(innerPaddings)
                     ) {
-                        composable(NavScreen.Joke.route) { JokeScreen() }
+                        composable(NavScreen.Joke.route) {
+                            val jokeViewModel = hiltViewModel<JokeViewModel>()
+                            JokeScreen(jokeViewModel)
+                        }
                         composable(NavScreen.Favorites.route) { FavoritesScreen() }
                     }
                 }
