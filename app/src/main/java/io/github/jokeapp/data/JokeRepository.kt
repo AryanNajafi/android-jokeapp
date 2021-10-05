@@ -4,6 +4,7 @@ import io.github.jokeapp.data.api.JokeService
 import io.github.jokeapp.data.db.JokeDao
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -21,5 +22,9 @@ class JokeRepository @Inject constructor(
         withContext(ioDispatcher) {
             jokeDao.insertJoke(joke)
         }
+    }
+
+    fun loadSavedJokes(): Flow<List<Joke>> {
+        return jokeDao.loadAllSavedJokes()
     }
 }

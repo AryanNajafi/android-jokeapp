@@ -21,12 +21,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jokeapp.R
+import io.github.jokeapp.ui.favorites.FavoriteJokesViewModel
 import io.github.jokeapp.ui.favorites.FavoritesScreen
 import io.github.jokeapp.ui.joke.JokeScreen
 import io.github.jokeapp.ui.joke.JokeViewModel
 import io.github.jokeapp.ui.theme.JokeApplicationTheme
 import io.github.jokeapp.ui.theme.LightGray
 import io.github.jokeapp.ui.theme.Teal200
+import kotlinx.coroutines.InternalCoroutinesApi
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -36,6 +38,7 @@ class MainActivity : ComponentActivity() {
         NavScreen.Favorites,
     )
 
+    @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -63,7 +66,10 @@ class MainActivity : ComponentActivity() {
                             val jokeViewModel = hiltViewModel<JokeViewModel>()
                             JokeScreen(jokeViewModel)
                         }
-                        composable(NavScreen.Favorites.route) { FavoritesScreen() }
+                        composable(NavScreen.Favorites.route) {
+                            val favoriteJokesViewModel = hiltViewModel<FavoriteJokesViewModel>()
+                            FavoritesScreen(favoriteJokesViewModel)
+                        }
                     }
                 }
             }
