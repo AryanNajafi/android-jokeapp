@@ -1,3 +1,12 @@
 package io.github.jokeapp.data
 
-data class Joke(val id: String, val joke: String, val status: Int)
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
+
+@Entity
+data class Joke(
+    @PrimaryKey val id: String,
+    val joke: String,
+    @Ignore val status: Int
+)
