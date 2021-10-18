@@ -5,6 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -17,10 +20,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jokeapp.R
 import io.github.jokeapp.data.Joke
@@ -41,12 +44,13 @@ class MainActivity : ComponentActivity() {
         NavScreen.Favorites,
     )
 
+    @ExperimentalAnimationApi
     @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             JokeApplicationTheme {
-                val navController = rememberNavController()
+                val navController = rememberAnimatedNavController()
                 Scaffold(
                     topBar = {
                         val appTitle = stringResource(id = R.string.app_name)
@@ -60,16 +64,92 @@ class MainActivity : ComponentActivity() {
                     },
                     backgroundColor = LightGray
                 ) { innerPaddings ->
-                    NavHost(
+                    AnimatedNavHost(
                         navController = navController,
                         startDestination = NavScreen.Joke.route,
                         modifier = Modifier.padding(innerPaddings)
                     ) {
-                        composable(NavScreen.Joke.route) {
+                        composable(
+                            route = NavScreen.Joke.route,
+                            enterTransition = { initial, _ ->
+                                when (initial.destination.route) {
+                                    NavScreen.Favorites.route -> slideIntoContainer(
+                                        towards = AnimatedContentScope.SlideDirection.Left,
+                                        animationSpec = tween(500)
+                                    )
+                                    else -> null
+                                }
+                            },
+                            exitTransition = { _, target ->
+                                when (target.destination.route) {
+                                    NavScreen.Favorites.route -> slideOutOfContainer(
+                                        towards = AnimatedContentScope.SlideDirection.Left,
+                                        animationSpec = tween(500)
+                                    )
+                                    else -> null
+                                }
+                            },
+                            popEnterTransition = { initial, _ ->
+                                when (initial.destination.route) {
+                                    NavScreen.Favorites.route -> slideIntoContainer(
+                                        towards = AnimatedContentScope.SlideDirection.Right,
+                                        animationSpec = tween(500)
+                                    )
+                                    else -> null
+                                }
+                            },
+                            popExitTransition = { _, target ->
+                                when (target.destination.route) {
+                                    NavScreen.Favorites.route -> slideOutOfContainer(
+                                        towards = AnimatedContentScope.SlideDirection.Right,
+                                        animationSpec = tween(500)
+                                    )
+                                    else -> null
+                                }
+                            },
+                        ) {
                             val jokeViewModel = hiltViewModel<JokeViewModel>()
                             JokeScreen(jokeViewModel)
                         }
-                        composable(NavScreen.Favorites.route) {
+                        composable(
+                            NavScreen.Favorites.route,
+                            enterTransition = { initial, _ ->
+                                when (initial.destination.route) {
+                                    NavScreen.Joke.route -> slideIntoContainer(
+                                        towards = AnimatedContentScope.SlideDirection.Left,
+                                        animationSpec = tween(500)
+                                    )
+                                    else -> null
+                                }
+                            },
+                            exitTransition = { _, target ->
+                                when (target.destination.route) {
+                                    NavScreen.Joke.route -> slideOutOfContainer(
+                                        towards = AnimatedContentScope.SlideDirection.Left,
+                                        animationSpec = tween(500)
+                                    )
+                                    else -> null
+                                }
+                            },
+                            popEnterTransition = { initial, _ ->
+                                when (initial.destination.route) {
+                                    NavScreen.Joke.route -> slideIntoContainer(
+                                        towards = AnimatedContentScope.SlideDirection.Right,
+                                        animationSpec = tween(500)
+                                    )
+                                    else -> null
+                                }
+                            },
+                            popExitTransition = { _, target ->
+                                when (target.destination.route) {
+                                    NavScreen.Joke.route -> slideOutOfContainer(
+                                        towards = AnimatedContentScope.SlideDirection.Right,
+                                        animationSpec = tween(500)
+                                    )
+                                    else -> null
+                                }
+                            },
+                        ) {
                             val favoriteJokesViewModel = hiltViewModel<FavoriteJokesViewModel>()
                             FavoritesScreen(favoriteJokesViewModel)
                         }
