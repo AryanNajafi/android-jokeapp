@@ -14,6 +14,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import io.github.jokeapp.R
 import io.github.jokeapp.data.Joke
 import io.github.jokeapp.ui.shareJoke
@@ -28,17 +31,81 @@ fun FavoritesScreen(
     val context = LocalContext.current
 
     LazyColumn(modifier = Modifier.padding(10.dp)) {
-        items(viewState.jokes) { joke ->
-            FavoriteJokeCard(
-                joke = joke,
-                onJokeDelete = {
-                    viewModel.removeJokeFromFavorites(it)
-                    Toast.makeText(context, R.string.toast_joke_removed, Toast.LENGTH_SHORT).show()
-                },
-                onJokeShare = {
-                    shareJoke(context, it)
+        if (viewState.loading.not()) {
+            items(viewState.jokes) { joke ->
+                FavoriteJokeCard(
+                    joke = joke,
+                    onJokeDelete = {
+                        viewModel.removeJokeFromFavorites(it)
+                        Toast.makeText(context, R.string.toast_joke_removed, Toast.LENGTH_SHORT).show()
+                    },
+                    onJokeShare = {
+                        shareJoke(context, it)
+                    }
+                )
+            }
+        } else {
+            items(10) {
+                Card(
+                    modifier = Modifier
+                        .padding(vertical = 5.dp, horizontal = 5.dp)
+                        .fillMaxWidth(),
+                    elevation = 4.dp
+                ) {
+                    Column {
+                        Text(
+                            text = "Lorem ipsum dolor sit amet, consectetur",
+                            style = MaterialTheme.typography.body1,
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .placeholder(
+                                    visible = viewState.loading,
+                                    highlight = PlaceholderHighlight.shimmer()
+                                )
+                        )
+
+                        Text(
+                            text = "Lorem ipsum dolor sit amet, ",
+                            style = MaterialTheme.typography.body1,
+                            modifier = Modifier
+                                .padding(horizontal = 10.dp)
+                                .placeholder(
+                                    visible = viewState.loading,
+                                    highlight = PlaceholderHighlight.shimmer()
+                                )
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Divider(color = Color.LightGray, thickness = 1.dp)
+                        Spacer(modifier = Modifier.height(5.dp))
+
+                        Row {
+                            Text(
+                                text = stringResource(id = R.string.button_remove_favorite_title),
+                                style = MaterialTheme.typography.h6,
+                                modifier = Modifier
+                                    .padding(horizontal = 5.dp)
+                                    .placeholder(
+                                        visible = viewState.loading,
+                                        highlight = PlaceholderHighlight.shimmer()
+                                    )
+                            )
+
+                            Text(
+                                text = stringResource(id = R.string.button_share_title),
+                                style = MaterialTheme.typography.h6,
+                                modifier = Modifier
+                                    .padding(horizontal = 5.dp)
+                                    .placeholder(
+                                        visible = viewState.loading,
+                                        highlight = PlaceholderHighlight.shimmer()
+                                    )
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+                    }
                 }
-            )
+            }
         }
     }
 }

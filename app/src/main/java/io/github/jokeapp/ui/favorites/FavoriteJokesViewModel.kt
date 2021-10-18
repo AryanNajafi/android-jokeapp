@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jokeapp.data.Joke
 import io.github.jokeapp.data.JokeRepository
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -23,6 +24,8 @@ class FavoriteJokesViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            _uiState.value = FavoritesViewState(loading = true)
+            delay(5000)
             repository.loadSavedJokes().collect { jokes ->
                 _uiState.value = FavoritesViewState(jokes)
             }
